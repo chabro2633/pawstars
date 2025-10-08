@@ -1,0 +1,12 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/compatibility/route": "app/api/compatibility/route.js",
+  "/api/fortune/route": "app/api/fortune/route.js",
+  "/compatibility/page": "app/compatibility/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/fortune/page": "app/fortune/page.js",
+  "/page": "app/page.js",
+  "/result/page": "app/result/page.js",
+  "/results/[id]/page": "app/results/[id]/page.js",
+  "/results/page": "app/results/page.js"
+}
