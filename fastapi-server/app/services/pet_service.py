@@ -172,3 +172,4 @@ class PetService:
 
 # 전역 인스턴스 생성
 pet_service = PetService()
+

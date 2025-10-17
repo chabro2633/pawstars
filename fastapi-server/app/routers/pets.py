@@ -139,3 +139,4 @@ async def get_daily_fortune(pet_name: str, birth_date: str, target_date: str = N
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"일일 운세 조회 중 오류 발생: {str(e)}"
         )
+

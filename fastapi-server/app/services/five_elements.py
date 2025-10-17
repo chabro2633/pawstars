@@ -139,3 +139,4 @@ def get_element_compatibility(element1: str, element2: str) -> Dict[str, Any]:
         return {"relationship": "동기", "compatibility": "보통", "description": "같은 오행으로 안정적입니다"}
     else:
         return {"relationship": "중성", "compatibility": "보통", "description": "특별한 상성은 없습니다"}
+

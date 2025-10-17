@@ -2,13 +2,14 @@ import { NextRequest } from "next/server";
 
 type RequestBody = {
   dogName: string;
-  breed: string;
-  sex: "male" | "female";
-  birthDate: string | null;
+  dogBreed: string;
+  dogSex: "male" | "female";
+  dogBirthDate: string | null;
   ownerName: string;
   ownerBirthDate: string;
-  ownerBirthTime: string;
-  ownerEB: string;
+  ownerBirthTime: string | null;
+  ownerYearZodiac: string;
+  ownerTimeZodiac: string;
 };
 
 export async function POST(req: NextRequest) {
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
     return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
   }
 
-  if (!body?.dogName || !body?.breed || !body?.ownerName || !body?.ownerEB) {
+  if (!body?.dogName || !body?.dogBreed || !body?.ownerName) {
     return new Response(JSON.stringify({ error: "missing required fields" }), { status: 400 });
   }
 
@@ -66,16 +67,19 @@ export async function POST(req: NextRequest) {
 }
 
 function makePrompt(body: RequestBody) {
-  const sexKo = body.sex === "male" ? "수컷" : "암컷";
-  const birth = body.birthDate ? body.birthDate : "모름";
+  const sexKo = body.dogSex === "male" ? "수컷" : "암컷";
+  const birth = body.dogBirthDate ? body.dogBirthDate : "모름";
+  const ownerZodiac = `${body.ownerYearZodiac}${body.ownerTimeZodiac ? ` / ${body.ownerTimeZodiac}` : ''}`;
   return [
     `강아지-주인 궁합을 12지지를 참조하여 분석해줘.`,
     `강아지 이름: ${body.dogName}`,
-    `견종: ${body.breed}`,
+    `견종: ${body.dogBreed}`,
     `성별: ${sexKo}`,
     `생년월일: ${birth}`,
     `주인 이름: ${body.ownerName}`,
-    `주인 12지지: ${body.ownerEB}`,
+    `주인 12지지: ${ownerZodiac}`,
+    `주인 생년월일: ${body.ownerBirthDate}`,
+    `주인 태어난 시간: ${body.ownerBirthTime || "모름"}`,
     "요청사항:",
     "- 궁합 총평 2~3문장.",
     "- 함께하면 좋은 활동 2~3가지.",

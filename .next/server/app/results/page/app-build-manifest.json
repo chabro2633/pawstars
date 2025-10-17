@@ -3,15 +3,16 @@
     "/results/page": [
       "static/chunks/ff1a16fafef87110.js",
       "static/chunks/7dd66bdf8a7e5707.js",
-      "static/chunks/b8d6e7711a765183.css",
-      "static/chunks/48987aec33f482b0.js",
+      "static/chunks/2473c16c0c2f6b5f.css",
+      "static/chunks/f493c2ef2390331c.css",
+      "static/chunks/98ee6759fca32609.js",
       "static/chunks/a809c2589c872ab7.js",
-      "static/chunks/c85a7d07e7b82c9a.js",
-      "static/chunks/5a50ee1d1bd5f6b0.js",
-      "static/chunks/30cb146bc1e6f45f.js",
+      "static/chunks/94bfed6bcc83c30d.js",
+      "static/chunks/91adb7bdb9870c6a.js",
       "static/chunks/8082ab48faca5ea1.js",
-      "static/chunks/8de370c3cbabf345.js",
-      "static/chunks/turbopack-758e9a24449670c4.js"
+      "static/chunks/150316a471952cee.js",
+      "static/chunks/2008ffcf9e5b170c.js",
+      "static/chunks/turbopack-0f5d3935df343d9f.js"
     ]
   }
 }

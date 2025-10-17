@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="274" height="219" viewBox="0 0 274 219">
+  <g id="Background">
+    <rect x="0" y="0" width="274" height="219" fill="#2C1844"/>
+  </g>
+  <g id="Star">
+    <polygon points="137,22 156,87 225,87 168,124 190,197 137,158 84,197 106,124 49,87 118,87" fill="#FFC44D"/>
+  </g>
+  <g id="Paw">
+    <ellipse id="Pad-Center" cx="137.0" cy="93.0" rx="25.0" ry="21.0" fill="#4A2A16"/>
+    <ellipse id="Toe-1" cx="108.0" cy="72.0" rx="10.0" ry="12.0" fill="#4A2A16"/>
+    <ellipse id="Toe-2" cx="166.0" cy="72.0" rx="10.0" ry="12.0" fill="#4A2A16"/>
+    <ellipse id="Toe-3" cx="119.0" cy="59.0" rx="11.0" ry="11.0" fill="#4A2A16"/>
+    <ellipse id="Toe-4" cx="159.0" cy="59.0" rx="11.0" ry="11.0" fill="#4A2A16"/>
+  </g>
+  <g id="Text">
+    <text x="66" y="178" fill="#FFC44D" font-family="Luckiest Guy, 'Arial Rounded MT Bold', Arial, sans-serif" font-size="28px">PAWSTARS</text>
+  </g>
+</svg>

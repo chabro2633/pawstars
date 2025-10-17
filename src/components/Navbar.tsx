@@ -1,13 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/fortune', label: '강아지 삼주', icon: '🐕' },
+    { href: '/home', label: '홈', icon: '🏠' },
+    { href: '/fortune', label: '강아지 삼주', icon: '🔮' },
     { href: '/compatibility', label: '견주 궁합', icon: '💕' },
     { href: '/results', label: '결과 보기', icon: '📊' }
   ];
@@ -17,8 +19,15 @@ export default function Navbar() {
       <div className="max-w-md mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="text-xl font-bold text-white">
-            🌟 PawStars
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-white">
+            <Image 
+              src="/pawstars_logo.jpg" 
+              alt="PawStars Logo" 
+              width={32}
+              height={32}
+              className="rounded-full object-cover"
+            />
+            PawStars
           </Link>
 
           {/* Navigation Items */}

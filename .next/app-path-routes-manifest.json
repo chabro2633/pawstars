@@ -5,8 +5,14 @@
   "/compatibility/page": "/compatibility",
   "/favicon.ico/route": "/favicon.ico",
   "/fortune/page": "/fortune",
+  "/home/page": "/home",
+  "/new-fortune/page": "/new-fortune",
+  "/owner-info/page": "/owner-info",
   "/page": "/",
+  "/pet-info/page": "/pet-info",
+  "/pet-profile/page": "/pet-profile",
   "/result/page": "/result",
   "/results/[id]/page": "/results/[id]",
-  "/results/page": "/results"
+  "/results/page": "/results",
+  "/splash/page": "/splash"
 }

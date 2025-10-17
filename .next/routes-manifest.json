@@ -60,6 +60,36 @@
       "namedRegex": "^/fortune(?:/)?$"
     },
     {
+      "page": "/home",
+      "regex": "^/home(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/home(?:/)?$"
+    },
+    {
+      "page": "/new-fortune",
+      "regex": "^/new\\-fortune(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/new\\-fortune(?:/)?$"
+    },
+    {
+      "page": "/owner-info",
+      "regex": "^/owner\\-info(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/owner\\-info(?:/)?$"
+    },
+    {
+      "page": "/pet-info",
+      "regex": "^/pet\\-info(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pet\\-info(?:/)?$"
+    },
+    {
+      "page": "/pet-profile",
+      "regex": "^/pet\\-profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pet\\-profile(?:/)?$"
+    },
+    {
       "page": "/result",
       "regex": "^/result(?:/)?$",
       "routeKeys": {},
@@ -70,6 +100,12 @@
       "regex": "^/results(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/results(?:/)?$"
+    },
+    {
+      "page": "/splash",
+      "regex": "^/splash(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/splash(?:/)?$"
     }
   ],
   "dataRoutes": [],

@@ -100,3 +100,4 @@ async def search_dates_by_ganzi(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"간지 패턴 검색 중 오류 발생: {str(e)}"
         )
+

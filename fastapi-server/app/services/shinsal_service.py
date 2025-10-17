@@ -183,3 +183,4 @@ def get_shinsal_summary(shinsal_results: Dict[str, Any]) -> Dict[str, Any]:
         "total_count": len(active_shinsal),
         "summary": summary
     }
+

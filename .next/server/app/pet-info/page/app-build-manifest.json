@@ -1,0 +1,20 @@
+{
+  "pages": {
+    "/pet-info/page": [
+      "static/chunks/ff1a16fafef87110.js",
+      "static/chunks/7dd66bdf8a7e5707.js",
+      "static/chunks/2473c16c0c2f6b5f.css",
+      "static/chunks/f493c2ef2390331c.css",
+      "static/chunks/98ee6759fca32609.js",
+      "static/chunks/7dbd70729b38539d.js",
+      "static/chunks/3e4d9d607c19a2d9.js",
+      "static/chunks/f2f48529d4570787.js",
+      "static/chunks/94bfed6bcc83c30d.js",
+      "static/chunks/91adb7bdb9870c6a.js",
+      "static/chunks/8082ab48faca5ea1.js",
+      "static/chunks/150316a471952cee.js",
+      "static/chunks/2008ffcf9e5b170c.js",
+      "static/chunks/turbopack-0f5d3935df343d9f.js"
+    ]
+  }
+}

@@ -1,0 +1,177 @@
+/**
+ * Pet Fortune App Animations
+ * Figma Make 프로토타입에서 추출된 애니메이션
+ */
+
+/* 키프레임 애니메이션 */
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pf-animation-fadeIn {
+  animation: fadeIn 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation-iteration-count: 1;
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.pf-animation-slideRight {
+  animation: slideRight 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation-iteration-count: 1;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pf-animation-bounce {
+  animation: bounce 200ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation-iteration-count: 1;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.pf-animation-pulse {
+  animation: pulse 1000ms ease;
+  animation-iteration-count: infinite;
+}
+
+/* 인터랙션 효과 */
+.pf-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--pf-shadow-glow);
+}
+
+.pf-click-scale:active {
+  transform: scale(0.98);
+}
+
+.pf-focus-glow:focus {
+  outline: none;
+  border-color: var(--pf-color-brand-primary);
+  box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.1);
+}
+
+.pf-smooth-scroll {
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.pf-smooth-scroll > * {
+  scroll-snap-align: start;
+}
+
+/* 상태별 스타일 */
+.pf-state-loading {
+  cursor: wait;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.pf-state-error {
+  border-color: var(--pf-color-error);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.pf-state-success {
+  border-color: var(--pf-color-success);
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+/* 페이지 트랜지션 */
+.page-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 로딩 스피너 */
+.pf-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--pf-color-bg-surface);
+  border-top: 4px solid var(--pf-color-brand-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 진행률 바 */
+.pf-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--pf-color-bg-surface);
+  border-radius: var(--pf-radius-full);
+  overflow: hidden;
+}
+
+.pf-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--pf-color-brand-primary), var(--pf-color-brand-secondary));
+  border-radius: var(--pf-radius-full);
+  transition: width 0.3s ease;
+}
+
+/* 반응형 애니메이션 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

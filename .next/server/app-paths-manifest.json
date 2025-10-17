@@ -5,8 +5,14 @@
   "/compatibility/page": "app/compatibility/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/fortune/page": "app/fortune/page.js",
+  "/home/page": "app/home/page.js",
+  "/new-fortune/page": "app/new-fortune/page.js",
+  "/owner-info/page": "app/owner-info/page.js",
   "/page": "app/page.js",
+  "/pet-info/page": "app/pet-info/page.js",
+  "/pet-profile/page": "app/pet-profile/page.js",
   "/result/page": "app/result/page.js",
   "/results/[id]/page": "app/results/[id]/page.js",
-  "/results/page": "app/results/page.js"
+  "/results/page": "app/results/page.js",
+  "/splash/page": "app/splash/page.js"
 }

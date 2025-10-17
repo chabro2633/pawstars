@@ -96,3 +96,4 @@ class ErrorResponse(BaseModel):
     error: str = Field(..., description="에러 메시지")
     detail: Optional[str] = Field(None, description="상세 에러 정보")
     timestamp: str = Field(default_factory=lambda: datetime.now().isoformat(), description="에러 발생 시각")
+

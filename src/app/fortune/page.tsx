@@ -1,7 +1,11 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { saveDogInfo, loadDogInfo, type DogInfo } from "@/utils/dogInfoStorage";
+import PageTransition from "@/components/transitions/PageTransition";
+import { useLoadingState } from "@/components/transitions/useInteractions";
+import BackButton from "@/components/BackButton";
 
 type Sex = "male" | "female";
 
@@ -217,9 +221,26 @@ export default function FortunePage() {
   const [breed, setBreed] = useState("");
   const [breedQuery, setBreedQuery] = useState("");
   const [sex, setSex] = useState<Sex>("male");
-  const [birthDate, setBirthDate] = useState("");
+  const [birthYear, setBirthYear] = useState("");
+  const [birthMonth, setBirthMonth] = useState("");
+  const [birthDay, setBirthDay] = useState("");
   const [unknownBirthDate, setUnknownBirthDate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { isLoading: animationLoading, startLoading } = useLoadingState();
+
+  // 저장된 강아지 정보 불러오기
+  useEffect(() => {
+    const savedDogInfo = loadDogInfo();
+    if (savedDogInfo) {
+      setName(savedDogInfo.name);
+      setBreed(savedDogInfo.breed);
+      setBreedQuery(savedDogInfo.breed);
+      setSex(savedDogInfo.sex);
+      setBirthYear(savedDogInfo.birthYear);
+      setBirthMonth(savedDogInfo.birthMonth);
+      setBirthDay(savedDogInfo.birthDay);
+    }
+  }, []);
 
   const filteredBreeds = useMemo(() => {
     if (!breedQuery.trim()) return [];
@@ -248,9 +269,23 @@ export default function FortunePage() {
       return;
     }
 
+    // 강아지 정보를 쿠키에 저장
+    const dogInfo: DogInfo = {
+      name: name.trim(),
+      breed: breed.trim(),
+      sex,
+      birthYear,
+      birthMonth,
+      birthDay
+    };
+    saveDogInfo(dogInfo);
+
     setLoading(true);
+    startLoading();
 
     try {
+      const birthDate = unknownBirthDate ? null : `${birthYear}-${birthMonth.padStart(2, '0')}-${birthDay.padStart(2, '0')}`;
+      
       const response = await fetch("/api/fortune", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -258,7 +293,7 @@ export default function FortunePage() {
           name,
           breed,
           sex,
-          birthDate: unknownBirthDate ? null : birthDate,
+          birthDate,
         }),
       });
 
@@ -274,7 +309,7 @@ export default function FortunePage() {
         name,
         breed,
         sex,
-        birthDate: unknownBirthDate ? 'unknown' : birthDate,
+        birthDate: unknownBirthDate ? 'unknown' : (birthDate || ''),
         fortune: data.fortune,
         saju: data.saju
       });
@@ -289,10 +324,16 @@ export default function FortunePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-md mx-auto px-4 py-8">
+    <PageTransition type="slide-right">
+      <div className="min-h-screen" style={{ background: 'var(--pf-color-bg-primary)', color: 'var(--pf-color-text-primary)' }}>
+        <div className="max-w-md mx-auto px-4 py-8">
+          {/* Header with back button */}
+          <div className="flex items-center justify-between mb-6">
+            <BackButton href="/home" />
+            <h1 className="text-xl font-bold">🐕 강아지 삼주</h1>
+            <div className="w-16"></div> {/* Spacer for centering */}
+          </div>
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold mb-2">🐕 강아지 삼주</h1>
           <p className="text-white/60">강아지의 사주와 운세를 알아보세요</p>
         </div>
 
@@ -408,12 +449,8 @@ export default function FortunePage() {
                   <div className="flex gap-2">
                     <select
                       className="flex-1 rounded-md border border-white/10 bg-white/5 px-3 py-3 text-white focus:border-white/30 focus:outline-none text-base"
-                      value={birthDate.split('-')[0] || ''}
-                      onChange={(e) => {
-                        const parts = birthDate.split('-');
-                        const newDate = `${e.target.value}-${parts[1] || '01'}-${parts[2] || '01'}`;
-                        setBirthDate(newDate);
-                      }}
+                      value={birthYear}
+                      onChange={(e) => setBirthYear(e.target.value)}
                     >
                       <option value="">년도</option>
                       {Array.from({ length: 20 }, (_, i) => 2024 - i).map((year) => (
@@ -422,12 +459,8 @@ export default function FortunePage() {
                     </select>
                     <select
                       className="flex-1 rounded-md border border-white/10 bg-white/5 px-3 py-3 text-white focus:border-white/30 focus:outline-none text-base"
-                      value={birthDate.split('-')[1] || ''}
-                      onChange={(e) => {
-                        const parts = birthDate.split('-');
-                        const newDate = `${parts[0] || '2020'}-${e.target.value.padStart(2, '0')}-${parts[2] || '01'}`;
-                        setBirthDate(newDate);
-                      }}
+                      value={birthMonth}
+                      onChange={(e) => setBirthMonth(e.target.value)}
                     >
                       <option value="">월</option>
                       {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
@@ -436,12 +469,8 @@ export default function FortunePage() {
                     </select>
                     <select
                       className="flex-1 rounded-md border border-white/10 bg-white/5 px-3 py-3 text-white focus:border-white/30 focus:outline-none text-base"
-                      value={birthDate.split('-')[2] || ''}
-                      onChange={(e) => {
-                        const parts = birthDate.split('-');
-                        const newDate = `${parts[0] || '2020'}-${parts[1] || '01'}-${e.target.value.padStart(2, '0')}`;
-                        setBirthDate(newDate);
-                      }}
+                      value={birthDay}
+                      onChange={(e) => setBirthDay(e.target.value)}
                     >
                       <option value="">일</option>
                       {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
@@ -457,12 +486,13 @@ export default function FortunePage() {
           <button
             onClick={submit}
             disabled={loading}
-            className="w-full bg-white text-black py-4 px-6 rounded-lg font-medium text-lg hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`pf-button-primary w-full text-lg ${(loading || animationLoading) ? 'pf-state-loading' : ''}`}
           >
             {loading ? "분석 중..." : "🔮 삼주 보기"}
           </button>
         </div>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   );
 }

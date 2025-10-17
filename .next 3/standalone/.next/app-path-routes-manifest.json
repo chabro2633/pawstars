@@ -1,0 +1,12 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/compatibility/route": "/api/compatibility",
+  "/api/fortune/route": "/api/fortune",
+  "/compatibility/page": "/compatibility",
+  "/favicon.ico/route": "/favicon.ico",
+  "/fortune/page": "/fortune",
+  "/page": "/",
+  "/result/page": "/result",
+  "/results/[id]/page": "/results/[id]",
+  "/results/page": "/results"
+}

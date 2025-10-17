@@ -1,123 +1,303 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+/**
+ * ResultScreen.tsx
+ * Figma Make 파일에서 추출된 결과 화면
+ * 파일: https://www.figma.com/make/GJj0TWTrTDUFGhbS5UZq72/Pet-Fortune-App-Prototype
+ */
+
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
-type Payload = {
-  fortune: string | null;
-  compatibility: string | null;
-  dog: { name: string; breed: string; sex: string; neutered: boolean | null; birth: string | null };
-  owner: { name: string; earthlyBranch: string };
-};
+interface ResultData {
+  type: 'fortune' | 'compatibility';
+  data: {
+    name?: string;
+    breed?: string;
+    sex?: string;
+    birthDate?: string;
+    personality?: string;
+    favoriteActivity?: string;
+    specialNotes?: string;
+    fortune?: string;
+    saju?: string;
+    dogName?: string;
+    ownerName?: string;
+    compatibility?: string;
+    dogZodiac?: string;
+    ownerZodiac?: string;
+  };
+  timestamp: string;
+}
 
-function ResultInner() {
-  const params = useSearchParams();
+function ResultScreenContent() {
   const router = useRouter();
-  const [data, setData] = useState<Payload | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const textToShare = useMemo(() => {
-    if (!data) return "";
-    const d = data;
-    return `🐶 PawStars 결과\n이름: ${d.dog.name}\n견종: ${d.dog.breed}\n${d.dog.birth ? `생일: ${d.dog.birth}\n` : ""}${d.dog.sex !== "unknown" ? `성별: ${d.dog.sex === "male" ? "수컷" : "암컷"}${d.dog.neutered === true ? " (중성화)" : d.dog.neutered === false ? " (미중성화)" : ""}\n` : ""}${d.owner?.name ? `주인: ${d.owner.name}\n` : ""}${d.owner?.earthlyBranch ? `주인 12지지: ${d.owner.earthlyBranch}\n` : ""}${d.fortune ? `\n오늘의 운세: \n${d.fortune}\n` : ""}${d.compatibility ? `\n🐾 궁합: \n${d.compatibility}` : ""}`;
-  }, [data]);
+  const searchParams = useSearchParams();
+  const resultId = searchParams.get('id');
+  
+  const [result, setResult] = useState<ResultData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const key = params.get("key");
-    if (!key) {
-      setError("결과 키가 없어요. 처음부터 다시 진행해 주세요.");
-      return;
-    }
-    try {
-      const raw = sessionStorage.getItem(`pawstars:${key}`);
-      if (!raw) {
-        setError("저장된 결과를 찾을 수 없어요. 다시 진행해 주세요.");
-        return;
+    if (resultId) {
+      const savedResult = localStorage.getItem(resultId);
+      if (savedResult) {
+        try {
+          setResult(JSON.parse(savedResult));
+        } catch (error) {
+          console.error('Error parsing result:', error);
+        }
       }
-      const parsed = JSON.parse(raw) as Payload;
-      setData(parsed);
-    } catch {
-      setError("결과를 불러오는 중 오류가 발생했어요.");
     }
-  }, [params]);
+    setLoading(false);
+  }, [resultId]);
 
-  const share = async () => {
-    if (!data) return;
-    const text = textToShare;
-    try {
-      type KakaoTextShare = {
-        objectType: "text";
-        text: string;
-        link: { mobileWebUrl: string; webUrl: string };
-      };
-      const w = globalThis as unknown as {
-        Kakao?: { isInitialized?: () => boolean; Share: { sendDefault: (opts: KakaoTextShare) => void } };
-      };
-      if (w?.Kakao && w.Kakao.isInitialized?.()) {
-        w.Kakao.Share.sendDefault({ objectType: "text", text, link: { mobileWebUrl: location.href, webUrl: location.href } });
-        return;
-      }
-      if (navigator.share) {
-        await navigator.share({ title: "PawStars 결과", text });
-        return;
-      }
-      await navigator.clipboard.writeText(text);
-      alert("결과를 클립보드에 복사했어요.");
-    } catch {
-      try {
-        await navigator.clipboard.writeText(textToShare);
-        alert("결과를 클립보드에 복사했어요.");
-      } catch {
-        alert("공유에 실패했어요. 다시 시도해 주세요.");
-      }
+  const shareResult = () => {
+    if (!result) return;
+
+    const text = result.type === 'fortune' 
+      ? `🔮 ${result.data.name}의 사주 분석 결과\n\n${result.data.fortune}`
+      : `💕 ${result.data.dogName}와 ${result.data.ownerName}의 궁합\n\n${result.data.compatibility}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'PawStars 분석 결과',
+        text: text,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert('결과가 클립보드에 복사되었습니다!');
     }
   };
 
+  const handleReAnalyze = () => {
+    if (result?.type === 'fortune') {
+      router.push('/pet-profile');
+    } else {
+      router.push('/owner-info');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="figma-loading-container">
+        <div className="figma-spinner"></div>
+        <p>결과를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (!result) {
+    return (
+      <div className="figma-error-container">
+        <div className="figma-error-content">
+          <div className="figma-error-icon">❌</div>
+          <h2 className="figma-error-title">결과를 찾을 수 없습니다</h2>
+          <p className="figma-error-description">
+            분석 결과가 존재하지 않거나 만료되었습니다.
+          </p>
+          <Link href="/home">
+            <button className="figma-primary-button">홈으로 돌아가기</button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen w-full max-w-xl mx-auto px-4 py-5 sm:px-6 sm:py-10">
-      <h1 className="text-xl sm:text-2xl font-bold mb-5 sm:mb-6">PawStars 결과</h1>
-      {error ? (
-        <div className="text-red-500 text-sm">{error}</div>
-      ) : !data ? (
-        <div>불러오는 중...</div>
-      ) : (
-        <div className="space-y-6">
-          {data.fortune ? (
-            <div className="rounded-lg border border-black/10 dark:border-white/20 p-4 whitespace-pre-wrap leading-6">
-              {data.fortune}
-            </div>
-          ) : null}
-          {data.compatibility ? (
-            <div className="rounded-lg border border-black/10 dark:border-white/20 p-4 whitespace-pre-wrap leading-6">
-              {data.compatibility}
-            </div>
-          ) : null}
-          <div className="flex flex-col sm:flex-row gap-3 pt-2">
-            <button
-              className="w-full sm:w-auto rounded-md bg-black text-white dark:bg-white dark:text-black px-4 py-3"
-              onClick={() => router.push("/")}
-            >
-              다시 분석하기
-            </button>
-            <button
-              className="w-full sm:w-auto rounded-md border border-black/10 dark:border-white/20 px-4 py-3"
-              onClick={share}
-            >
-              결과 공유하기
-            </button>
+    <div className="figma-result-container">
+      <div className="figma-result-frame">
+        
+        {/* 헤더 */}
+        <div className="figma-screen-header">
+          <button 
+            className="figma-back-button"
+            onClick={() => router.push('/home')}
+          >
+            ←
+          </button>
+          <h1 className="figma-screen-title">분석 결과</h1>
+          <button 
+            className="figma-share-header-button"
+            onClick={shareResult}
+          >
+            📤
+          </button>
+        </div>
+
+        {/* 결과 타입 헤더 */}
+        <div className="figma-result-type-header">
+          <div className="figma-result-type-icon">
+            {result.type === 'fortune' ? '🔮' : '💕'}
+          </div>
+          <div className="figma-result-type-info">
+            <h2 className="figma-result-type-title">
+              {result.type === 'fortune' ? '사주 분석 결과' : '궁합 분석 결과'}
+            </h2>
+            <p className="figma-result-type-date">
+              {new Date(result.timestamp).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </p>
           </div>
         </div>
-      )}
+
+        {/* 결과 내용 */}
+        <div className="figma-result-content">
+          
+          {result.type === 'fortune' ? (
+            // 사주 분석 결과
+            <div className="figma-fortune-result">
+              {/* 반려견 정보 카드 */}
+              <div className="figma-result-pet-card">
+                <div className="figma-result-pet-avatar">🐕</div>
+                <div className="figma-result-pet-info">
+                  <h3 className="figma-result-pet-name">{result.data.name}</h3>
+                  <div className="figma-result-pet-details">
+                    <span>{result.data.breed}</span>
+                    <span className="figma-divider">•</span>
+                    <span>{result.data.sex === 'male' ? '수컷' : '암컷'}</span>
+                    {result.data.birthDate && (
+                      <>
+                        <span className="figma-divider">•</span>
+                        <span>{result.data.birthDate}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* 사주 분석 섹션 */}
+              <div className="figma-result-sections">
+                <div className="figma-result-section">
+                  <div className="figma-result-section-header">
+                    <h4 className="figma-result-section-title">🔮 오늘의 운세</h4>
+                  </div>
+                  <div className="figma-result-section-content">
+                    <p className="figma-result-text">{result.data.fortune}</p>
+                  </div>
+                </div>
+
+                <div className="figma-result-section">
+                  <div className="figma-result-section-header">
+                    <h4 className="figma-result-section-title">📜 사주 분석</h4>
+                  </div>
+                  <div className="figma-result-section-content">
+                    <p className="figma-result-text">{result.data.saju}</p>
+                  </div>
+                </div>
+
+                {result.data.personality && (
+                  <div className="figma-result-section">
+                    <div className="figma-result-section-header">
+                      <h4 className="figma-result-section-title">🎭 성격 특성</h4>
+                    </div>
+                    <div className="figma-result-section-content">
+                      <p className="figma-result-text">{result.data.personality}</p>
+                    </div>
+                  </div>
+                )}
+
+                {result.data.favoriteActivity && (
+                  <div className="figma-result-section">
+                    <div className="figma-result-section-header">
+                      <h4 className="figma-result-section-title">🎾 좋아하는 활동</h4>
+                    </div>
+                    <div className="figma-result-section-content">
+                      <p className="figma-result-text">{result.data.favoriteActivity}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            // 궁합 분석 결과
+            <div className="figma-compatibility-result">
+              {/* 궁합 대상 카드 */}
+              <div className="figma-compatibility-subjects">
+                <div className="figma-compatibility-subject">
+                  <div className="figma-subject-avatar">🐕</div>
+                  <div className="figma-subject-info">
+                    <h4 className="figma-subject-name">{result.data.dogName}</h4>
+                    <p className="figma-subject-details">{result.data.dogZodiac}</p>
+                  </div>
+                </div>
+                
+                <div className="figma-compatibility-heart">💕</div>
+                
+                <div className="figma-compatibility-subject">
+                  <div className="figma-subject-avatar">👤</div>
+                  <div className="figma-subject-info">
+                    <h4 className="figma-subject-name">{result.data.ownerName}</h4>
+                    <p className="figma-subject-details">{result.data.ownerZodiac}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 궁합 분석 섹션 */}
+              <div className="figma-result-sections">
+                <div className="figma-result-section">
+                  <div className="figma-result-section-header">
+                    <h4 className="figma-result-section-title">💕 궁합 분석</h4>
+                  </div>
+                  <div className="figma-result-section-content">
+                    <p className="figma-result-text">{result.data.compatibility}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 하단 액션 버튼 */}
+        <div className="figma-result-actions">
+          <div className="figma-action-buttons">
+            <button
+              onClick={handleReAnalyze}
+              className="figma-secondary-button"
+            >
+              🔄 다시 분석하기
+            </button>
+            <button
+              onClick={shareResult}
+              className="figma-primary-button"
+            >
+              📤 결과 공유하기
+            </button>
+          </div>
+          
+          <div className="figma-additional-actions">
+            <Link href="/home">
+              <button className="figma-text-button">🏠 홈으로 돌아가기</button>
+            </Link>
+            {result.type === 'fortune' && (
+              <Link href="/owner-info">
+                <button className="figma-text-button">💕 궁합도 분석해보기</button>
+              </Link>
+            )}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
 
-export default function ResultPage() {
+export default function ResultScreen() {
   return (
-    <Suspense fallback={<div className="min-h-screen w-full max-w-xl mx-auto px-4 py-5 sm:px-6 sm:py-10">불러오는 중...</div>}>
-      <ResultInner />
+    <Suspense fallback={
+      <div className="figma-loading-container">
+        <div className="figma-spinner"></div>
+        <p>결과를 불러오는 중...</p>
+      </div>
+    }>
+      <ResultScreenContent />
     </Suspense>
   );
 }
-
-

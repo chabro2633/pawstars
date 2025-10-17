@@ -109,3 +109,4 @@ def get_all_branches(pillars: Dict[str, str]) -> list:
         stems_branches["month"]["branch"],
         stems_branches["day"]["branch"]
     ]
+
